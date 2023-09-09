@@ -1,8 +1,17 @@
 "use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import fireLogo from "../assets/fire-icon.png";
 
+const IS_WALLET_CREATED = true;
+
 export default function Homepage() {
+  const router = useRouter();
+
+  if (IS_WALLET_CREATED) {
+    router.push("/dashboard");
+  }
+
   return (
     <div className="h-screen w-screen items-center justify-center flex flex-col space-y-5">
       <div className="flex items-center justify-center p-4">
