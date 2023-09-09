@@ -9,7 +9,16 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    fontFamily: {
+      Manrope: ["Manrope"],
+      ClashDisplay: ["ClashDisplay"],
+    },
+    extend: {
+      colors: {
+        plum: "#312E45",
+        lavender: "#E1CFFF",
+      },
+    },
   },
   plugins: [],
 };
