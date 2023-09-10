@@ -2,7 +2,6 @@
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useAppStore } from "../services/AppStore";
 import Drawer from "./Drawer";
 import { Grant } from "./Grant";
 import { grants as defaultGrants } from "./Grants";
@@ -41,8 +40,6 @@ export const GrantList = ({ ...props }: GrantListProps) => {
   const [sellTokenPrice, setSellTokenPrice] = useState("0");
   const [grants, setGrants] = useState<Grant[]>(defaultGrants);
   const [myTokensFilter, setMyTokensFilter] = useState(false);
-  const { createTransaction, txs } = useAppStore();
-  console.log("txs", txs);
 
   useEffect(() => {
     const addSellPriceToGrants = async () => {
