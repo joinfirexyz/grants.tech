@@ -7,7 +7,7 @@ import { Grant } from "./Grant";
 import { grants as defaultGrants } from "./Grants";
 import { grantTechContract, setWethApproval } from "./contract";
 
-const USER_ADDRESS = '0x1eA7225C5749C1F031a06B55bAB335367A3715d4';
+const USER_ADDRESS = "0x1eA7225C5749C1F031a06B55bAB335367A3715d4";
 
 interface GrantListProps {
   grants: any[];
@@ -49,16 +49,19 @@ export const GrantList = ({ ...props }: GrantListProps) => {
             grant.anchor,
             1
           );
-          const quantityOwned = await grantTechContract.sharesBalance(grant.anchor, USER_ADDRESS);
+          grant.sellPrice = +ethers.utils.formatEther(tokenPrice.toString());
+          const quantityOwned = await grantTechContract.sharesBalance(
+            grant.anchor,
+            USER_ADDRESS
+          );
           grant.quantityOwned = quantityOwned;
-          grant.sellPrice = +ethers.utils.formatEther(tokenPrice.toString()) * quantityOwned.toNumber();
           return grant;
         })
       );
       setGrants(grantsWithSellPrice);
     };
     addSellPriceToGrants();
-  }, [modalOpen]);
+  }, [grants]);
 
   useEffect(() => {
     async function getBuyPrice() {
@@ -195,7 +198,7 @@ export const GrantList = ({ ...props }: GrantListProps) => {
               </label>
               <div className="px-4 items-center flex justify-between bg-gray-500 w-[350px] h-9 rounded-full mb-3">
                 <span className="text-white text-lg font-ClashDisplay">
-                  {(buyTokenPrice)}
+                  {buyTokenPrice}
                 </span>
                 <span className="text-white text-lg font-ClashDisplay">
                   WETH
@@ -227,8 +230,9 @@ export const GrantList = ({ ...props }: GrantListProps) => {
           {grants
             .filter((grant) => {
               return (
-                 !myTokensFilter || grant.quantityOwned && (grant.quantityOwned > 0)
-                );
+                !myTokensFilter ||
+                (grant.quantityOwned && grant.quantityOwned > 0)
+              );
             })
             .map((grant, index) => (
               <button

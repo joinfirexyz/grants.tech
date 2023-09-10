@@ -27,7 +27,7 @@ export const Grant = ({ size = "medium", ...props }: GrantProps) => {
           />
         </div>
         <div className="mt-0.5 ml-3">
-          <Pill primary={true}>{props.data.sellPrice}</Pill>
+          <Pill primary={true}>{props.data.sellPrice || 0}</Pill>
           <div className="ml-1">
             <div className="mt-5">
               <h3>{props.data.name}</h3>
