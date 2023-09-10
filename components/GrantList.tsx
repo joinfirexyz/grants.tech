@@ -16,7 +16,8 @@ interface GrantListProps {
 export const GrantList = ({ ...props }: GrantListProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [tokenPrice, setTokenPrice] = useState('0');
+  const [buyTokenPrice, setBuyTokenPrice] = useState('0');
+  const [sellTokenPrice, setSellTokenPrice] = useState('0');
   const provider = new ethers.providers.InfuraProvider(
     "goerli",
     "bec77b2c1b174308bcaa3e622828448f"
@@ -261,14 +262,22 @@ export const GrantList = ({ ...props }: GrantListProps) => {
   );
 
   useEffect(() => {
-    async function getPrice() {
+    async function getBuyPrice() {
       const tokenPrice = await grantTechContract.getBuyPrice(
         "0x17ae58ab79444ad5b8ee2e232caf13c65c32af75",
         1
       );
-      setTokenPrice(ethers.utils.formatEther(tokenPrice.toString()));
+      setBuyTokenPrice(ethers.utils.formatEther(tokenPrice.toString()));
     }
-    getPrice();
+    async function getSellPrice() {
+        const tokenPrice = await grantTechContract.getSellPrice(
+            "0x17ae58ab79444ad5b8ee2e232caf13c65c32af75",
+            1
+        );
+        setSellTokenPrice(ethers.utils.formatEther(tokenPrice.toString()));
+    }
+    getBuyPrice();
+    getSellPrice();
   }, []);
 
   const buyShares = async () => {
@@ -276,8 +285,16 @@ export const GrantList = ({ ...props }: GrantListProps) => {
       "0x17ae58ab79444ad5b8ee2e232caf13c65c32af75",
       1,
       {
-        value: ethers.utils.parseEther(tokenPrice),
+        value: ethers.utils.parseEther(buyTokenPrice),
       }
+    );
+    await tx.wait();
+  }
+
+  const sellShares = async () => {
+    const tx = await grantTechContract.sellShares(
+      "0x17ae58ab79444ad5b8ee2e232caf13c65c32af75",
+      1
     );
     await tx.wait();
   }
@@ -293,7 +310,14 @@ export const GrantList = ({ ...props }: GrantListProps) => {
               buyShares();
             }}
           >
-            Buy for {tokenPrice}
+            Buy for {buyTokenPrice}
+          </button>
+          <button
+            onClick={() => {
+              sellShares();
+            }}
+          >
+            Sell for {sellTokenPrice}
           </button>
         </div>
       </Drawer>
