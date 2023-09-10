@@ -1,11 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { Dispatch, SetStateAction } from "react";
 import { Pill } from "./Pill";
 
 interface GrantProps {
   size?: "small" | "medium" | "large";
   data: any;
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 /**
@@ -13,7 +15,10 @@ interface GrantProps {
  */
 export const Grant = ({ size = "medium", ...props }: GrantProps) => {
   return (
-    <div className="p-2 shadow-md bg-white w-[348px] rounded-xl">
+    <button
+      className="p-2 shadow-md bg-white w-[348px] rounded-xl"
+      onClick={() => props.setModalOpen(true)}
+    >
       <div className="flex flex-row">
         <div>
           <img
@@ -84,6 +89,6 @@ export const Grant = ({ size = "medium", ...props }: GrantProps) => {
           </button>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
