@@ -1,5 +1,6 @@
 "use client";
 import { ethers } from "ethers";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Drawer from "./Drawer";
 import { Grant } from "./Grant";
@@ -42,6 +43,7 @@ type Grant = {
  * Primary UI component for user interaction
  */
 export const GrantList = ({ ...props }: GrantListProps) => {
+  const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [buyTokenPrice, setBuyTokenPrice] = useState("0");
@@ -222,7 +224,7 @@ export const GrantList = ({ ...props }: GrantListProps) => {
                 <button
                   className="bg-white rounded-full w-[170px] h-[44px] font-ClashDisplay text-plum hover:bg-gray-200"
                   onClick={() => {
-                    buyShares(grants[selectedIndex].anchor);
+                    router.push(`/checkout/buy/${selectedIndex}`);
                   }}
                 >
                   Buy
@@ -230,7 +232,7 @@ export const GrantList = ({ ...props }: GrantListProps) => {
                 <button
                   className="bg-white rounded-full w-[167px] h-[44px] font-ClashDisplay text-plum hover:bg-gray-200"
                   onClick={() => {
-                    sellShares(grants[selectedIndex].anchor);
+                    router.push(`/checkout/sell/${selectedIndex}`);
                   }}
                 >
                   Sell
