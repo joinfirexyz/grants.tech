@@ -81,3 +81,15 @@ export const getTokenPrice = async (
     return undefined;
   }
 };
+
+export const getTotalWalletBalance = async (walletAddress: string) => {
+  const res = await fetchERC20Assets(walletAddress, "0x5");
+
+  const balances = res.map((tokenHolding) => {
+    return tokenHolding.tokenBalanceUsdValue || 0;
+  });
+
+  // Sum up all the individual balances to get the total balance
+  const totalBalance = balances.reduce((acc, balance) => acc + balance, 0);
+  return totalBalance;
+};
