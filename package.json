@@ -11,7 +11,11 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@fireblocks/ncw-js-sdk": "^2.0.0",
     "autoprefixer": "^10.4.15",
+    "base58-js": "^2.0.0",
+    "install": "^0.13.0",
+    "lucide-react": "^0.276.0",
     "axios": "^1.5.0",
     "ethers": "5",
     "framer-motion": "^10.16.4",
@@ -22,7 +26,8 @@
     "react-dom": "18.2.0",
     "react-loader-spinner": "^5.4.5",
     "string-width": "^6.1.0",
-    "tailwindcss": "^3.3.3"
+    "tailwindcss": "^3.3.3",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.4.0",

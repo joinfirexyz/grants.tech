@@ -4,10 +4,6 @@ const provider = new ethers.providers.InfuraProvider(
   "goerli",
   "bec77b2c1b174308bcaa3e622828448f"
 );
-const wallet = new ethers.Wallet(
-  "5614556b0e9e476e3c2fb598f0bd034761e73182c073dbf8d88c917ce42ce4bc"
-);
-const signer = wallet.connect(provider);
 const contractAddress = "0xca0c1598da3944555cdfa0f54f3348a954619de9";
 const contractABI = [
   {
@@ -235,9 +231,20 @@ const contractABI = [
 
 export const grantTechContract = new ethers.Contract(
   contractAddress,
-  contractABI,
-  signer
+  contractABI
 );
+
+export const sendTransaction = async (
+  fnName: string,
+  args: unknown[]
+): Promise<ethers.providers.TransactionReceipt> => {
+  const pKey = localStorage.getItem("DEMO_APP:deviceKey");
+  const wallet = new ethers.Wallet(pKey!);
+  const signer = wallet.connect(provider);
+  const writableContract = grantTechContract.connect(signer);
+  const tx = await writableContract[fnName](...args);
+  return tx.wait();
+};
 
 export const setWethApproval = async () => {
   const erc20Abi = [
@@ -246,7 +253,9 @@ export const setWethApproval = async () => {
 
   // WETH ERC20 Token Contract Address
   const tokenAddress = "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6";
-
+  const pKey = localStorage.getItem("DEMO_APP:deviceKey");
+  const wallet = new ethers.Wallet(pKey!);
+  const signer = wallet.connect(provider);
   // Set up a contract instance
   let tokenContract = new ethers.Contract(tokenAddress, erc20Abi, signer);
 

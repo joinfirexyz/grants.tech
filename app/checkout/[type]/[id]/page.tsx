@@ -6,9 +6,11 @@ import { Grant } from "../../../../components/GrantList";
 import { grants as defaultGrants } from "../../../../components/Grants";
 import {
   grantTechContract,
+  sendTransaction,
   setWethApproval,
 } from "../../../../components/contract";
 import { WalletContext } from "../../../../contexts/WalletContext";
+import { useAppStore } from "../../../../services/AppStore";
 
 export default function Page({
   params,
@@ -22,6 +24,7 @@ export default function Page({
   const [grants, setGrants] = useState<Grant[]>(defaultGrants);
   const { walletAddress } = useContext(WalletContext);
   const [loading, setLoading] = useState(false);
+  const { createTransaction, txs } = useAppStore();
 
   useEffect(() => {
     const addSellPriceToGrants = async () => {
@@ -61,20 +64,32 @@ export default function Page({
 
   const buyShares = async (address: string) => {
     setLoading(true);
+    const txReq = {
+      to: grantTechContract.address,
+      data: grantTechContract.interface.encodeFunctionData("buyShares", [
+        address,
+        1,
+      ]),
+      value: ethers.utils.parseEther(buyTokenPrice),
+    } satisfies ethers.providers.TransactionRequest;
+
+    await createTransaction({
+      transactionRequest: txReq,
+    });
     const approvalTx = await setWethApproval();
     await approvalTx.wait(1);
-    const tx = await grantTechContract.buyShares(address, 1);
-    await tx.wait();
+    const result = await sendTransaction("buyShares", [address, 1]);
+    console.log("result", result);
     setLoading(false);
-    alert("Key successfully bought!")
+    alert("Key successfully bought!");
   };
 
   const sellShares = async (address: string) => {
     setLoading(true);
-    const tx = await grantTechContract.sellShares(address, 1);
-    await tx.wait();
+    const result = await sendTransaction("sellShares", [address, 1]);
+    console.log("result", result);
     setLoading(false);
-    alert("Key successfully sold!")
+    alert("Key successfully sold!");
   };
 
   return (
@@ -146,7 +161,7 @@ export default function Page({
               color="white"
               ariaLabel="tail-spin-loading"
               radius="1"
-              wrapperStyle={{position: "absolute", left: "50px"}}
+              wrapperStyle={{ position: "absolute", left: "50px" }}
               wrapperClass=""
               visible={true}
             />
