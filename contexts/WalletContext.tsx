@@ -3,7 +3,7 @@
 import { createContext, useState } from "react";
 
 //just using our fire dev addr for now. replace once the user is able to create their own account
-const DUMMY_WALLET_ADDRESS = "0x8D6c17Df259C8c11eb334D1B52F44bB6F9752aeF";
+const DUMMY_WALLET_ADDRESS = "0x1eA7225C5749C1F031a06B55bAB335367A3715d4";
 
 interface WalletContext {
   walletAddress: string | undefined;
