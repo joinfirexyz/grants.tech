@@ -1,16 +1,47 @@
 "use client";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import fireLogo from "../assets/fire-icon.png";
-
-const IS_WALLET_CREATED = true;
+import { useAppStore } from "../services/AppStore";
 
 export default function Homepage() {
-  const router = useRouter();
+  const {
+    initAppStore,
+    fireblocksNCW,
+    generateNewDeviceId,
+    assignCurrentDevice,
+    fireblocksNCWStatus,
+    assignDeviceStatus,
+    appStoreInitialized,
+    loginToDemoAppServer,
+  } = useAppStore();
 
-  if (IS_WALLET_CREATED) {
-    router.push("/dashboard");
-  }
+  const onClickCreateWallet = async () => {
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+      if (fireblocksNCW) {
+        await fireblocksNCW.clearAllStorage();
+      }
+      userId = Math.random().toString(36).substring(2);
+      localStorage.setItem("userId", userId);
+      console.log("userId", userId);
+      initAppStore(userId);
+      await loginToDemoAppServer();
+      await generateNewDeviceId();
+      await assignCurrentDevice();
+    } else {
+      console.log("userId", userId);
+      initAppStore(userId);
+    }
+  };
+
+  useEffect(() => {
+    const init = async () => {};
+    init();
+  }, [assignCurrentDevice, fireblocksNCW, generateNewDeviceId, initAppStore]);
+
+  console.log("fireblocksNCWStatus", fireblocksNCWStatus);
+  console.log("appStoreInitialized", appStoreInitialized);
 
   return (
     <div className="h-screen w-screen items-center justify-center flex flex-col space-y-5">
@@ -18,7 +49,7 @@ export default function Homepage() {
         <Image
           className="mx-auto mb-1 h-24 w-auto cursor-pointer self-center"
           src={fireLogo}
-          alt="Workflow"
+          alt="Fire Logo"
         />
       </div>
       <div className="flex text-[30px] font-semibold shrink mx-auto text-left flex-col font-ClashDisplay mb-10">
@@ -27,11 +58,9 @@ export default function Homepage() {
       </div>
       <button
         className="w-[332px] h-[50px] font-ClashDisplay rounded-full text-center bg-lavender hover:bg-lavender/80"
-        onClick={() => {
-          console.log("TODO: init wallet creation here");
-        }}
+        onClick={onClickCreateWallet}
       >
-        Create Wallet
+        Create Wallet {assignDeviceStatus} {appStoreInitialized}
       </button>
     </div>
   );
