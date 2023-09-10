@@ -1,16 +1,19 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useContext, useEffect } from "react";
 import fireLogo from "../assets/fire-icon.png";
-
-const IS_WALLET_CREATED = true;
+import { WalletContext } from "../contexts/WalletContext";
 
 export default function Homepage() {
   const router = useRouter();
+  const { walletAddress } = useContext(WalletContext);
 
-  if (IS_WALLET_CREATED) {
-    router.push("/dashboard");
-  }
+  useEffect(() => {
+    if (walletAddress) {
+      router.push("/dashboard");
+    }
+  }, [walletAddress, router]);
 
   return (
     <div className="h-screen w-screen items-center justify-center flex flex-col space-y-5">
@@ -31,7 +34,7 @@ export default function Homepage() {
           console.log("TODO: init wallet creation here");
         }}
       >
-        Create Wallet
+        Create Account
       </button>
     </div>
   );

@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import React from "react";
 import { HeadMetadata } from "../components/HeadMetadata";
+import { WalletContextProvider } from "../contexts/WalletContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,8 +19,10 @@ export default function RootLayout({
     <html lang="en">
       {HeadMetadata}
       <body>
-        {/* <Header /> */}
-        <main>{children}</main>
+        <WalletContextProvider>
+          {/* <Header /> */}
+          <main>{children}</main>
+        </WalletContextProvider>
         {/* <Footer /> */}
       </body>
     </html>
