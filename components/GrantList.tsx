@@ -201,14 +201,14 @@ export const GrantList = ({ ...props }: GrantListProps) => {
               Key Price
             </label>
             <div className="px-4 items-center flex justify-between bg-gray-500 w-[350px] h-9 rounded-full mb-3">
-              <span className="text-white text-lg font-ClashDisplay">$100</span>
-              <span className="text-white text-lg font-ClashDisplay">USD</span>
+              <span className="text-white text-lg font-ClashDisplay">{(+buyTokenPrice + +sellTokenPrice) / 2}</span>
+              <span className="text-white text-lg font-ClashDisplay">ETH</span>
             </div>
             <div className="space-x-3 flex flex-row items-center justify-center">
               <button
                 className="bg-white rounded-full w-[170px] h-[44px] font-ClashDisplay text-plum hover:bg-gray-200"
                 onClick={() => {
-                  console.log("TODO: Add buy call here", grants[selectedIndex]);
+                  buyShares(grants[selectedIndex].anchor);
                 }}
               >
                 Buy
@@ -216,7 +216,7 @@ export const GrantList = ({ ...props }: GrantListProps) => {
               <button
                 className="bg-white rounded-full w-[167px] h-[44px] font-ClashDisplay text-plum hover:bg-gray-200"
                 onClick={() => {
-                  console.log("TODO: Add buy call here", grants[selectedIndex]);
+                  sellShares(grants[selectedIndex].anchor);
                 }}
               >
                 Sell
@@ -224,25 +224,6 @@ export const GrantList = ({ ...props }: GrantListProps) => {
             </div>
             <div className="h-5" />
           </div>
-        </div>
-        <div className="h-[375px] p-4">
-          <h1 className="font-ClashDisplay text-xl">
-            {grants[selectedIndex].name}
-          </h1>
-          <button
-            onClick={() => {
-              buyShares(grants[selectedIndex].anchor);
-            }}
-          >
-            Buy for {buyTokenPrice}
-          </button>
-          <button
-            onClick={() => {
-              sellShares(grants[selectedIndex].anchor);
-            }}
-          >
-            Sell for {sellTokenPrice}
-          </button>
         </div>
       </Drawer>
       <div className={`flex flex-col space-y-3  ${props.className}`}>
