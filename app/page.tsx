@@ -45,7 +45,7 @@ export default function Homepage() {
   const statusToProgress = (status?: TKeyStatus | null) => {
     switch (status) {
       case "INITIATED":
-        return "Wallet creation initiated";
+        return "Account creation initiated";
       case "REQUESTED_SETUP":
         return "Initiation complete";
       case "SETUP":
@@ -55,7 +55,7 @@ export default function Homepage() {
       case "READY":
         return "Completed";
       default:
-        return "Creating Wallet";
+        return "Creating Account";
     }
   };
   useEffect(() => {
@@ -89,7 +89,7 @@ export default function Homepage() {
         {isLoading && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
         {isLoading
           ? statusToProgress(keysStatus?.MPC_CMP_ECDSA_SECP256K1?.keyStatus)
-          : "Create Wallet"}
+          : "Create Account"}
       </button>
     </div>
   );

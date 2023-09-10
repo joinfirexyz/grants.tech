@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import React from "react";
-import { HeadMetadata } from "../components/HeadMetadata";
-import { WalletContextProvider } from "../contexts/WalletContext";
-import "./globals.css";
+import DashboardHeader from "../../components/DashboardHeader";
+import { HeadMetadata } from "../../components/HeadMetadata";
 
 export const metadata: Metadata = {
   title: "grants.tech",
@@ -19,10 +18,8 @@ export default function RootLayout({
     <html lang="en">
       {HeadMetadata}
       <body>
-        <WalletContextProvider>
-          {/* <Header /> */}
-          <main>{children}</main>
-        </WalletContextProvider>
+        <DashboardHeader />
+        <main>{children}</main>
         {/* <Footer /> */}
       </body>
     </html>
