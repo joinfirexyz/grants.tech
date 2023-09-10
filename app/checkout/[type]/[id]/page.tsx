@@ -1,9 +1,13 @@
 "use client";
 import { ethers } from "ethers";
 import { useContext, useEffect, useState } from "react";
+import { TailSpin } from "react-loader-spinner";
 import { Grant } from "../../../../components/GrantList";
 import { grants as defaultGrants } from "../../../../components/Grants";
-import { grantTechContract, setWethApproval } from "../../../../components/contract";
+import {
+  grantTechContract,
+  setWethApproval,
+} from "../../../../components/contract";
 import { WalletContext } from "../../../../contexts/WalletContext";
 
 export default function Page({
@@ -17,6 +21,7 @@ export default function Page({
   const [sellTokenPrice, setSellTokenPrice] = useState("0");
   const [grants, setGrants] = useState<Grant[]>(defaultGrants);
   const { walletAddress } = useContext(WalletContext);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const addSellPriceToGrants = async () => {
@@ -55,15 +60,21 @@ export default function Page({
   }, [id]);
 
   const buyShares = async (address: string) => {
+    setLoading(true);
     const approvalTx = await setWethApproval();
     await approvalTx.wait(1);
     const tx = await grantTechContract.buyShares(address, 1);
     await tx.wait();
+    setLoading(false);
+    alert("Key successfully bought!")
   };
 
   const sellShares = async (address: string) => {
+    setLoading(true);
     const tx = await grantTechContract.sellShares(address, 1);
     await tx.wait();
+    setLoading(false);
+    alert("Key successfully sold!")
   };
 
   return (
@@ -120,14 +131,27 @@ export default function Page({
         </div>
         <div className="h-5" />
         <button
-          className="bg-plum w-[348px] h-[44px] rounded-full hover:bg-plum/80 text-white font-ClashDisplay"
+          className="bg-plum w-[348px] h-[44px] rounded-full hover:bg-plum/80 text-white font-ClashDisplay flex items-center justify-center space-x-2"
+          disabled={loading}
           onClick={() => {
             type === "buy"
               ? buyShares(grants[id].anchor)
               : sellShares(grants[id].anchor);
           }}
         >
-          Confirm key purchase
+          {loading && (
+            <TailSpin
+              height="30"
+              width="30"
+              color="white"
+              ariaLabel="tail-spin-loading"
+              radius="1"
+              wrapperStyle={{position: "absolute", left: "50px"}}
+              wrapperClass=""
+              visible={true}
+            />
+          )}
+          <div>Confirm key purchase</div>
         </button>
       </div>
     </div>

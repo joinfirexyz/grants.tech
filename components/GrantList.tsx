@@ -58,7 +58,7 @@ export const GrantList = ({ ...props }: GrantListProps) => {
       setGrants(grantsWithSellPrice);
     };
     addSellPriceToGrants();
-  }, []);
+  }, [modalOpen]);
 
   useEffect(() => {
     async function getBuyPrice() {
@@ -195,10 +195,10 @@ export const GrantList = ({ ...props }: GrantListProps) => {
               </label>
               <div className="px-4 items-center flex justify-between bg-gray-500 w-[350px] h-9 rounded-full mb-3">
                 <span className="text-white text-lg font-ClashDisplay">
-                  {(+buyTokenPrice + +sellTokenPrice) / 2}
+                  {(buyTokenPrice)}
                 </span>
                 <span className="text-white text-lg font-ClashDisplay">
-                  ETH
+                  WETH
                 </span>
               </div>
               <div className="space-x-3 flex flex-row items-center justify-center">
