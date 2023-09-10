@@ -1,6 +1,6 @@
 {
   "name": "grant.tech",
-  "short_name": "grantTech",
+  "short_name": "grant.tech",
   "description": "A Progressive Web App built with Next.js",
   "start_url": "/",
   "display": "standalone",
