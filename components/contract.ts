@@ -8,7 +8,7 @@ const wallet = new ethers.Wallet(
   "5614556b0e9e476e3c2fb598f0bd034761e73182c073dbf8d88c917ce42ce4bc"
 );
 const signer = wallet.connect(provider);
-const contractAddress = "0xc09fc02765c5a107fef80501843481fe47013b27";
+const contractAddress = "0xca0c1598da3944555cdfa0f54f3348a954619de9";
 const contractABI = [
   {
     anonymous: false,
@@ -86,7 +86,7 @@ const contractABI = [
     ],
     name: "buyShares",
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -174,7 +174,7 @@ const contractABI = [
     ],
     name: "sellShares",
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -249,4 +249,21 @@ export const sendTransaction = async (
   const writableContract = grantTechContract.connect(signer);
   const tx = await writableContract[fnName](...args);
   return tx.wait();
+};
+
+export const setWethApproval = async () => {
+  const erc20Abi = [
+    "function approve(address spender, uint256 value) public returns (bool)",
+  ];
+
+  // WETH ERC20 Token Contract Address
+  const tokenAddress = "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6";
+
+  // Set up a contract instance
+  let tokenContract = new ethers.Contract(tokenAddress, erc20Abi, signer);
+
+  // Amount you want to approve (taking into account the token decimals, e.g., for 100 tokens with 18 decimals: 100 * 10**18)
+  let amount = ethers.utils.parseUnits("100", 18); // Approving 100 tokens, assuming 18 decimals
+
+  return tokenContract.approve(contractAddress, amount);
 };

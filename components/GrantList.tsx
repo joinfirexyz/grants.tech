@@ -1,35 +1,25 @@
 "use client";
 import { ethers } from "ethers";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAppStore } from "../services/AppStore";
 import Drawer from "./Drawer";
 import { Grant } from "./Grant";
 import { grants as defaultGrants } from "./Grants";
-import { grantTechContract, sendTransaction } from "./contract";
+import { grantTechContract } from "./contract";
+
+const USER_ADDRESS = "0x1eA7225C5749C1F031a06B55bAB335367A3715d4";
 
 interface GrantListProps {
   grants: any[];
   className?: string;
 }
 
-// {
-//     id: "0xcde649b95fd2d6bbfbe036c9e74188a5302bda0dfa48730333b9f9b825a82924",
-//     anchor: "0x2bd2E7777b2581E5cb7B6fE4aAdeE2eeA8ECa038",
-//     githubLink: "https://github.com/airaffairdrones",
-//     twitterLink: "https://twitter.com/airaffairdrones",
-//     name: "AirAffair Drones",
-//     createdAt: "2021-07-26",
-//     description:
-//       "AirAffair - A drone service that plants seeds in deforested areas. Rebuilding our forests from the sky.",
-//     websiteUrl: "https://airaffairdrones.org",
-//     logoImg: "https://i.ibb.co/HpnPZdV/airaffair-drones-logo.png",
-//     bannerImg: "https://i.ibb.co/71fhcnJ/airaffair-drones.png",
-
-type Grant = {
+export type Grant = {
   id: string;
   anchor: string;
   logoImg: string;
-  sellPrice?: string;
+  sellPrice?: number;
   githubLink: string;
   twitterLink: string;
   name: string;
@@ -37,12 +27,14 @@ type Grant = {
   description: string;
   websiteUrl: string;
   bannerImg: string;
+  quantityOwned?: number;
 };
 
 /**
  * Primary UI component for user interaction
  */
 export const GrantList = ({ ...props }: GrantListProps) => {
+  const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [buyTokenPrice, setBuyTokenPrice] = useState("0");
@@ -60,14 +52,21 @@ export const GrantList = ({ ...props }: GrantListProps) => {
             grant.anchor,
             1
           );
-          grant.sellPrice = ethers.utils.formatEther(tokenPrice.toString());
+          const quantityOwned = await grantTechContract.sharesBalance(
+            grant.anchor,
+            USER_ADDRESS
+          );
+          grant.quantityOwned = quantityOwned;
+          grant.sellPrice =
+            +ethers.utils.formatEther(tokenPrice.toString()) *
+            quantityOwned.toNumber();
           return grant;
         })
       );
       setGrants(grantsWithSellPrice);
     };
     addSellPriceToGrants();
-  }, []);
+  }, [modalOpen]);
 
   useEffect(() => {
     async function getBuyPrice() {
@@ -88,27 +87,6 @@ export const GrantList = ({ ...props }: GrantListProps) => {
     getSellPrice();
   }, [selectedIndex]);
 
-  const buyShares = async (address: string) => {
-    const txReq = {
-      to: grantTechContract.address,
-      data: grantTechContract.interface.encodeFunctionData("buyShares", [
-        address,
-        1,
-      ]),
-      value: ethers.utils.parseEther(buyTokenPrice),
-    } satisfies ethers.providers.TransactionRequest;
-
-    await createTransaction({
-      transactionRequest: txReq,
-    });
-    const result = await sendTransaction("buyShares", [address, 1]);
-    console.log("result", result);
-  };
-
-  const sellShares = async (address: string) => {
-    const result = await sendTransaction("sellShares", [address, 1]);
-    console.log("result", result);
-  };
   return (
     <>
       <nav className="bg-white flex gap-2 min-w-full p-2 shadow-md">
@@ -225,17 +203,17 @@ export const GrantList = ({ ...props }: GrantListProps) => {
               </label>
               <div className="px-4 items-center flex justify-between bg-gray-500 w-[350px] h-9 rounded-full mb-3">
                 <span className="text-white text-lg font-ClashDisplay">
-                  {(+buyTokenPrice + +sellTokenPrice) / 2}
+                  {buyTokenPrice}
                 </span>
                 <span className="text-white text-lg font-ClashDisplay">
-                  ETH
+                  WETH
                 </span>
               </div>
               <div className="space-x-3 flex flex-row items-center justify-center">
                 <button
                   className="bg-white rounded-full w-[170px] h-[44px] font-ClashDisplay text-plum hover:bg-gray-200"
                   onClick={() => {
-                    buyShares(grants[selectedIndex].anchor);
+                    router.push(`/checkout/buy/${selectedIndex}`);
                   }}
                 >
                   Buy
@@ -243,7 +221,7 @@ export const GrantList = ({ ...props }: GrantListProps) => {
                 <button
                   className="bg-white rounded-full w-[167px] h-[44px] font-ClashDisplay text-plum hover:bg-gray-200"
                   onClick={() => {
-                    sellShares(grants[selectedIndex].anchor);
+                    router.push(`/checkout/sell/${selectedIndex}`);
                   }}
                 >
                   Sell
@@ -257,7 +235,8 @@ export const GrantList = ({ ...props }: GrantListProps) => {
           {grants
             .filter((grant) => {
               return (
-                !myTokensFilter || (grant.sellPrice && +grant.sellPrice > 0)
+                !myTokensFilter ||
+                (grant.quantityOwned && grant.quantityOwned > 0)
               );
             })
             .map((grant, index) => (

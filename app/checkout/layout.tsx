@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import React from "react";
-import { HeadMetadata } from "../components/HeadMetadata";
-import { WalletContextProvider } from "../contexts/WalletContext";
-import "./globals.css";
+import CheckoutHeader from "../../components/CheckoutHeader";
+import { HeadMetadata } from "../../components/HeadMetadata";
+import { WalletContextProvider } from "../../contexts/WalletContext";
 
 export const metadata: Metadata = {
   title: "grants.tech",
@@ -20,8 +20,8 @@ export default function RootLayout({
       <link rel="manifest" href="/manifest.json" />
       {HeadMetadata}
       <body>
+        <CheckoutHeader />
         <WalletContextProvider>
-          {/* <Header /> */}
           <main>{children}</main>
         </WalletContextProvider>
         {/* <Footer /> */}
