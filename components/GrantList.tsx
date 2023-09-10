@@ -5,6 +5,7 @@ import { Grant } from "./Grant";
 import { grants as defaultGrants } from "./Grants";
 import { ethers } from "ethers";
 import { grantTechContract } from "./contract";
+import { parse } from "json5";
 
 interface GrantListProps {
   grants: any[];
@@ -25,19 +26,18 @@ interface GrantListProps {
 //     bannerImg: "https://i.ibb.co/71fhcnJ/airaffair-drones.png",
 
 type Grant = {
-    id: string;
-    anchor: string;
-    logoImg: string;
-    buyPrice?: string;
-    githubLink: string;
-    twitterLink: string;
-    name: string;
-    createdAt: string;
-    description: string;
-    websiteUrl: string;
-    bannerImg: string;
-}
-
+  id: string;
+  anchor: string;
+  logoImg: string;
+  buyPrice?: string;
+  githubLink: string;
+  twitterLink: string;
+  name: string;
+  createdAt: string;
+  description: string;
+  websiteUrl: string;
+  bannerImg: string;
+};
 
 /**
  * Primary UI component for user interaction
@@ -45,25 +45,27 @@ type Grant = {
 export const GrantList = ({ ...props }: GrantListProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [buyTokenPrice, setBuyTokenPrice] = useState('0');
-  const [sellTokenPrice, setSellTokenPrice] = useState('0');
+  const [buyTokenPrice, setBuyTokenPrice] = useState("0");
+  const [sellTokenPrice, setSellTokenPrice] = useState("0");
   const [grants, setGrants] = useState<Grant[]>(defaultGrants);
 
   useEffect(() => {
     const addBuyPriceToGrants = async () => {
-        const grantsWithBuyPrice = await Promise.all(grants.map(async (grant) => {
-            const tokenPrice = await grantTechContract.getBuyPrice(
-                grant.anchor,
-                1
-            );
-            grant.buyPrice = ethers.utils.formatEther(tokenPrice.toString());
-            return grant;
-        }));
-        setGrants(grantsWithBuyPrice);
-    }
+      const grantsWithBuyPrice = await Promise.all(
+        grants.map(async (grant) => {
+          const tokenPrice = await grantTechContract.getBuyPrice(
+            grant.anchor,
+            1
+          );
+          grant.buyPrice = ethers.utils.formatEther(tokenPrice.toString());
+          return grant;
+        })
+      );
+      setGrants(grantsWithBuyPrice);
+    };
     addBuyPriceToGrants();
   }, []);
-  
+
   useEffect(() => {
     async function getBuyPrice() {
       const tokenPrice = await grantTechContract.getBuyPrice(
@@ -73,34 +75,27 @@ export const GrantList = ({ ...props }: GrantListProps) => {
       setBuyTokenPrice(ethers.utils.formatEther(tokenPrice.toString()));
     }
     async function getSellPrice() {
-        const tokenPrice = await grantTechContract.getSellPrice(
-            grants[selectedIndex].anchor,
-            1
-        );
-        setSellTokenPrice(ethers.utils.formatEther(tokenPrice.toString()));
+      const tokenPrice = await grantTechContract.getSellPrice(
+        grants[selectedIndex].anchor,
+        1
+      );
+      setSellTokenPrice(ethers.utils.formatEther(tokenPrice.toString()));
     }
     getBuyPrice();
     getSellPrice();
   }, [selectedIndex]);
 
   const buyShares = async (address: string) => {
-    const tx = await grantTechContract.buyShares(
-      address,
-      1,
-      {
-        value: ethers.utils.parseEther(buyTokenPrice),
-      }
-    );
+    const tx = await grantTechContract.buyShares(address, 1, {
+      value: ethers.utils.parseEther(buyTokenPrice),
+    });
     await tx.wait();
-  }
+  };
 
   const sellShares = async (address: string) => {
-    const tx = await grantTechContract.sellShares(
-      address,
-      1
-    );
+    const tx = await grantTechContract.sellShares(address, 1);
     await tx.wait();
-  }
+  };
   return (
     <>
       <Drawer visible={modalOpen} setVisible={setModalOpen}>
@@ -125,16 +120,20 @@ export const GrantList = ({ ...props }: GrantListProps) => {
         </div>
       </Drawer>
       <div className={`flex flex-col space-y-3  ${props.className}`}>
-        {grants.map((grant, index) => (
-          <button
-            key={index}
-            onClick={() => {
-              setSelectedIndex(index);
-            }}
-          >
-            <Grant key={index} data={grant} setModalOpen={setModalOpen} />
-          </button>
-        ))}
+        {grants
+          .filter((grant) => {
+            return grant.buyPrice && +grant.buyPrice > 0;
+          })
+          .map((grant, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                setSelectedIndex(index);
+              }}
+            >
+              <Grant key={index} data={grant} setModalOpen={setModalOpen} />
+            </button>
+          ))}
       </div>
     </>
   );
