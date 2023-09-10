@@ -4,6 +4,7 @@ import Image from "next/image";
 
 interface GrantProps {
   size?: "small" | "medium" | "large";
+  data: any;
 }
 
 const styles = {
@@ -42,6 +43,7 @@ const userCount = {
  * Primary UI component for user interaction
  */
 export const Grant = ({ size = "medium", ...props }: GrantProps) => {
+    console.log(props.data);
   return (
     <div style={styles} className="p-2">
       <div className="flex flex-row">
@@ -49,17 +51,17 @@ export const Grant = ({ size = "medium", ...props }: GrantProps) => {
           <img
             style={imageStyles}
             className="mr-2"
-            src="https://i.ibb.co/42V1xhP/earthcoin-initiative-logo.png"
+            src={props.data.logoImg}
           />
         </div>
         <div className="mt-0.5">
-          <Pill primary={true}>Balance $150.00</Pill>
+          <Pill primary={true}>$150.00</Pill>
           <div className="ml-1">
             <div className="mt-5">
-              <h3 style={header}>ETHSTAKER.TAX</h3>
+              <h3 style={header}>{props.data.name}</h3>
             </div>
             <div>
-              <h4 style={subHeader}>By 0xFf74...A0B7</h4>
+              <h4 style={subHeader}>By {props.data.anchor}</h4>
             </div>
           </div>
         </div>
@@ -68,20 +70,10 @@ export const Grant = ({ size = "medium", ...props }: GrantProps) => {
       <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700 mt-2.5 mb-2.5" />
       <div className="flex flex-row align-center justify-between">
         <div className="flex flex-row align-center">
-          <div className="flex flex-row align-center mr-3">
-            <Image
-              className="m-0.5"
-              src="/images/user.png"
-              alt="clock"
-              width="13"
-              height="13"
-            />
-            <span className="flex align-center" style={userCount}>
-              12,000
-            </span>
-          </div>
-
-          <Image
+       
+        </div>
+        <div className="flex flex-row align-center">
+        <Image
             className="m-0.5"
             src="/images/www.png"
             alt="clock"
@@ -102,16 +94,6 @@ export const Grant = ({ size = "medium", ...props }: GrantProps) => {
             width="13"
             height="13"
           />
-        </div>
-        <div className="flex flex-row align-center">
-          <Image
-            className="m-0.5"
-            src="/images/clock.png"
-            alt="clock"
-            width="13"
-            height="13"
-          />
-          <span style={userCount}>21H: 33M: 22S</span>
         </div>
       </div>
     </div>
