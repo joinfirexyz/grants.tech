@@ -1,12 +1,16 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 import { Pill } from "./Pill";
+import { grantTechContract } from "./contract";
 
 interface GrantProps {
   size?: "small" | "medium" | "large";
   data: any;
+  buyPrice: number;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -27,7 +31,7 @@ export const Grant = ({ size = "medium", ...props }: GrantProps) => {
           />
         </div>
         <div className="mt-0.5 ml-3">
-          <Pill primary={true}>$150.00</Pill>
+          <Pill primary={true}>{props.data.sellPrice}</Pill>
           <div className="ml-1">
             <div className="mt-5">
               <h3>{props.data.name}</h3>
@@ -36,8 +40,8 @@ export const Grant = ({ size = "medium", ...props }: GrantProps) => {
               <h4 className="text-gray-400">
                 By{" "}
                 {`${props.data.anchor.slice(0, 5)}...${props.data.anchor.slice(
-                  0,
-                  5
+                  -5,
+                  props.data.anchor.length
                 )}`}
               </h4>
             </div>
