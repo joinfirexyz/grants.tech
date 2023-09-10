@@ -6,23 +6,12 @@ import { grants as defaultGrants } from "./Grants";
 import { ethers } from "ethers";
 import { grantTechContract } from "./contract";
 
+const USER_ADDRESS = '0x1eA7225C5749C1F031a06B55bAB335367A3715d4';
+
 interface GrantListProps {
   grants: any[];
   className?: string;
 }
-
-// {
-//     id: "0xcde649b95fd2d6bbfbe036c9e74188a5302bda0dfa48730333b9f9b825a82924",
-//     anchor: "0x2bd2E7777b2581E5cb7B6fE4aAdeE2eeA8ECa038",
-//     githubLink: "https://github.com/airaffairdrones",
-//     twitterLink: "https://twitter.com/airaffairdrones",
-//     name: "AirAffair Drones",
-//     createdAt: "2021-07-26",
-//     description:
-//       "AirAffair - A drone service that plants seeds in deforested areas. Rebuilding our forests from the sky.",
-//     websiteUrl: "https://airaffairdrones.org",
-//     logoImg: "https://i.ibb.co/HpnPZdV/airaffair-drones-logo.png",
-//     bannerImg: "https://i.ibb.co/71fhcnJ/airaffair-drones.png",
 
 type Grant = {
   id: string;
@@ -36,6 +25,7 @@ type Grant = {
   description: string;
   websiteUrl: string;
   bannerImg: string;
+  quantityOwned?: number;
 };
 
 /**
@@ -57,7 +47,10 @@ export const GrantList = ({ ...props }: GrantListProps) => {
             grant.anchor,
             1
           );
+          const quantityOwned = await grantTechContract.sharesBalance(grant.anchor, USER_ADDRESS);
           grant.sellPrice = ethers.utils.formatEther(tokenPrice.toString());
+          grant.quantityOwned = quantityOwned;
+          console.log(grant.quantityOwned);
           return grant;
         })
       );
@@ -229,7 +222,7 @@ export const GrantList = ({ ...props }: GrantListProps) => {
       <div className={`flex flex-col space-y-3  ${props.className}`}>
         {grants
           .filter((grant) => {
-            return !myTokensFilter || (grant.sellPrice && +grant.sellPrice > 0);
+            return !myTokensFilter || grant.quantityOwned && (grant.quantityOwned > 0);
           })
           .map((grant, index) => (
             <button
