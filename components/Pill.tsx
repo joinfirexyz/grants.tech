@@ -10,7 +10,7 @@ const textStyles = {
   fontWeight: "600",
   letterSpacing: " 0.015em",
   textAlign: "center" as const,
-  color: 'white'
+  color: "white",
 };
 
 /**
@@ -19,7 +19,10 @@ const textStyles = {
 export const Pill = ({ primary = false, ...props }: PillProps) => {
   const mode = primary ? "lavender" : "lightGray";
   return (
-    <div style={textStyles} className={`bg-gray-100 px-2 rounded-full h-fit bg-${mode}`}>
+    <div
+      style={textStyles}
+      className={`bg-gray-100 px-2 w-fit rounded-full h-fit bg-${mode}`}
+    >
       {props.children}
     </div>
   );

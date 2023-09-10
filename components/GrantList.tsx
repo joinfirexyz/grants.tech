@@ -1,14 +1,10 @@
-import React from "react";
 import { Grant } from "./Grant";
-import {grants} from "./Grants";
+import { grants } from "./Grants";
 
 interface GrantListProps {
-  grants: GrantType[];
+  grants: any[];
+  className?: string;
 }
-
-type GrantType = {
-  title: string;
-};
 
 /**
  * Primary UI component for user interaction
@@ -16,9 +12,9 @@ type GrantType = {
 export const GrantList = ({ ...props }: GrantListProps) => {
   return (
     // map the grants to a list of Grant components
-    <div className="flex flex-col">
-      {grants.map((grant) => (
-        <Grant data={grant}/>
+    <div className={`flex flex-col space-y-3  ${props.className}`}>
+      {grants.map((grant, index) => (
+        <Grant key={index} data={grant} />
       ))}
     </div>
   );
