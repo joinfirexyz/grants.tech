@@ -280,9 +280,9 @@ export const GrantList = ({ ...props }: GrantListProps) => {
     getSellPrice();
   }, []);
 
-  const buyShares = async () => {
+  const buyShares = async (address: string) => {
     const tx = await grantTechContract.buyShares(
-      "0x17ae58ab79444ad5b8ee2e232caf13c65c32af75",
+      address,
       1,
       {
         value: ethers.utils.parseEther(buyTokenPrice),
@@ -291,9 +291,9 @@ export const GrantList = ({ ...props }: GrantListProps) => {
     await tx.wait();
   }
 
-  const sellShares = async () => {
+  const sellShares = async (address: string) => {
     const tx = await grantTechContract.sellShares(
-      "0x17ae58ab79444ad5b8ee2e232caf13c65c32af75",
+      address,
       1
     );
     await tx.wait();
@@ -307,14 +307,14 @@ export const GrantList = ({ ...props }: GrantListProps) => {
           </h1>
           <button
             onClick={() => {
-              buyShares();
+              buyShares(grants[selectedIndex].anchor);
             }}
           >
             Buy for {buyTokenPrice}
           </button>
           <button
             onClick={() => {
-              sellShares();
+              sellShares(grants[selectedIndex].anchor);
             }}
           >
             Sell for {sellTokenPrice}

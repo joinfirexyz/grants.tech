@@ -1,7 +1,7 @@
 export const grants = [
   {
     id: "0xcde649b95fd2d6bbfbe036c9e74188a5302bda0dfa48730333b9f9b825a82924",
-    anchor: "0xffcaa99f23be1f239c32ecd97004698b5973e83d",
+    anchor: "0x2bd2E7777b2581E5cb7B6fE4aAdeE2eeA8ECa038",
     githubLink: "https://github.com/airaffairdrones",
     twitterLink: "https://twitter.com/airaffairdrones",
     name: "AirAffair Drones",
@@ -14,7 +14,7 @@ export const grants = [
   },
   {
     id: "0xdc9b7349f52b60250399623245a1879367e9b156dfd460ce2a315af1e7cc7ebc",
-    anchor: "0x559c1f7103ce1857e92b41e7aa121bd2104e655a",
+    anchor: "0x029b6A142E047A19be1626688a1cC3d075F4a5af",
     githubLink: "https://github.com/ecodriveev",
     twitterLink: "https://twitter.com/ecodriveev",
     name: "EcoDrive EV",
@@ -27,7 +27,7 @@ export const grants = [
   },
   {
     id: "0xdd24c7e8a35d4a95f0f4b8f5c819b7c2a0029807a39b0a2f8cb4bf51141816ff",
-    anchor: "0x4157199a3dfae237b67aba88b593735aea9d5d33",
+    anchor: "0xbAec44f49Df3578749Fb299769D723eAccDdB605",
     githubLink: "https://github.com/waterwebai",
     twitterLink: "https://twitter.com/waterwebai",
     name: "WaterWeb AI",
@@ -40,7 +40,7 @@ export const grants = [
   },
   {
     id: "0xe95e5d6d22ca3926fea364e04d1a47faf8abedadc60a1409d0d28c92462ce586",
-    anchor: "0xdbf79c7c61dd3924d198cd161200168970847b21",
+    anchor: "0x4501285E8FFE2d38828F1E69FB57a6a2fAAC2620",
     githubLink: "https://github.com/naturtokencrypto",
     twitterLink: "https://twitter.com/naturtokencrypto",
     name: "NaturToken Crypto",
@@ -53,7 +53,7 @@ export const grants = [
   },
   {
     id: "0xec3b888b11acdf6cab7a35c97b2435487c93f28e86e7ad456483dd46ba5f3dae",
-    anchor: "0x1fc787e11c6b2064220411606761c52bfd00b2e8",
+    anchor: "0xa255AE8258627f211883f575d0BBcC9AA67A74E8",
     githubLink: "https://github.com/sunburstgrid",
     twitterLink: "https://twitter.com/sunburstgrid",
     name: "SunBurst Grid",
@@ -66,7 +66,7 @@ export const grants = [
   },
   {
     id: "0xee8cde89dc8ebeaff54aaea3a59c79f49dfacd43ac349d532b7b7abbd598639f",
-    anchor: "0x53ae94cfac47331ce2a73319d272b6fb73cb2d36",
+    anchor: "0x8Ce6D035a518205d08eb6245D11e6bE021209B4a",
     githubLink: "https://github.com/greenprint3d",
     twitterLink: "https://twitter.com/greenprint3d",
     name: "GreenPrint 3D",
@@ -79,7 +79,7 @@ export const grants = [
   },
   {
     id: "0xef9877949861c6eac0d3981c54834e8be9caed59816c68fd69fdfe3ee5cae4e3",
-    anchor: "0x3d80e129751f236dff79d2d775ad8915689ce16d",
+    anchor: "0xf1aF66123f87488e3176bE039e44B0d084460490",
     githubLink: "https://github.com/solarwavecomm",
     twitterLink: "https://twitter.com/solarwavecomm",
     name: "SolarWave Comm",
@@ -92,7 +92,7 @@ export const grants = [
   },
   {
     id: "0xf0e7cb0e1455c389165fe3eb251c994bda127924843a1178504fcd54bb069a60",
-    anchor: "0x945e2224f63cf18338b9cecb33554e3d8ca04fb8",
+    anchor: "0x69646Cc8e833A808Edbb1ee8def5B0BBde3879ee",
     githubLink: "https://github.com/econetservices",
     twitterLink: "https://twitter.com/econetservices",
     name: "EcoNet Services",
@@ -105,7 +105,7 @@ export const grants = [
   },
   {
     id: "0xf2922c25db6ec4f23272300ef5fd06b1de4fe09567b98c54625f7162329c984b",
-    anchor: "0x26013de9f9ba19bf8dd92cccfd1e7e829d439b29",
+    anchor: "0x5cF03dEcCD84B5Ec7e51aeC3706bc7aA24dc8dEA",
     githubLink: "https://github.com/furoacompute",
     twitterLink: "https://twitter.com/furoacompute",
     name: "Furoa Compute",
@@ -118,7 +118,7 @@ export const grants = [
   },
   {
     id: "0xf63bbcfe56807e4a1f97aff8571dd4477c91546d1fb9dbc1b2d8bc09f1a465d7",
-    anchor: "0x964f1f7d0aa19f6b93caee5d2a1ea279cc7a0124",
+    anchor: "0x925f808FD3C71E47D2D1a133d971d7fb74132cA2",
     githubLink: "https://github.com/earthcoininitiative",
     twitterLink: "https://twitter.com/earthcoininitiative",
     name: "EarthCoin Initiative",
