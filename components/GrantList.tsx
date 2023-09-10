@@ -25,7 +25,7 @@ interface GrantListProps {
 //     logoImg: "https://i.ibb.co/HpnPZdV/airaffair-drones-logo.png",
 //     bannerImg: "https://i.ibb.co/71fhcnJ/airaffair-drones.png",
 
-type Grant = {
+export type Grant = {
   id: string;
   anchor: string;
   logoImg: string;

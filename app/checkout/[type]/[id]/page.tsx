@@ -1,6 +1,8 @@
 "use client";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
+import { Grant } from "../../../../components/GrantList";
+import { grants as defaultGrants } from "../../../../components/Grants";
 import { grantTechContract } from "../../../../components/contract";
 
 export default function Page({
@@ -69,7 +71,7 @@ export default function Page({
       <h3>{`${type} 1 key of ${grants[id as any].name}`}</h3>
       <h1>{type === "buy" ? buyTokenPrice : sellTokenPrice}</h1>
 
-      <div className="w-[350px]">
+      <div className="w-[350px] shadow-md font-ClashDisplay">
         <div className="grid grid-cols-3 space-x-10 border border-gray-200 rounded-t-lg px-3 py-1">
           <div>Pay with</div>
           <div>...address...</div>
@@ -83,7 +85,7 @@ export default function Page({
           <div>Goerli</div>
         </div>
       </div>
-      <div>
+      <div className="w-[350px]">
         <div className="flex justify-between">
           <span className="font-ClashDisplay text-plum">Network Fee</span>
           <span className="font-ClashDisplay text-gray-300">$0.01</span>
@@ -97,8 +99,10 @@ export default function Page({
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="font-ClashDisplay text-plum">Total Cost</span>
-          <span className="font-ClashDisplay text-gray-300">
+          <span className="font-ClashDisplay text-plum font-semibold">
+            Total Cost
+          </span>
+          <span className="font-ClashDisplay text-gray-300 font-semibold">
             {type === "buy"
               ? Number(buyTokenPrice)
               : Number(sellTokenPrice) + type === "buy"
@@ -107,7 +111,7 @@ export default function Page({
           </span>
         </div>
         <button
-          className="bg-plum w-[348px] h-[44px] rounded-full hover:bg-plum/80"
+          className="bg-plum w-[348px] h-[44px] rounded-full hover:bg-plum/80 text-white font-ClashDisplay"
           onClick={() => {
             type === "buy"
               ? buyShares(grants[id].anchor)
