@@ -18,18 +18,6 @@ interface GrantProps {
  * Primary UI component for user interaction
  */
 export const Grant = ({ size = "medium", ...props }: GrantProps) => {
-  const [buyTokenPrice, setBuyTokenPrice] = useState("0");
-
-  useEffect(() => {
-    async function getBuyPrice() {
-      const tokenPrice = await grantTechContract.getBuyPrice(
-        props.data.anchor,
-        1
-      );
-      setBuyTokenPrice(ethers.utils.formatEther(tokenPrice.toString()));
-    }
-    getBuyPrice();
-  }, []);
   return (
     <button
       className="p-2 shadow-md bg-white w-[348px] rounded-xl"
@@ -43,7 +31,7 @@ export const Grant = ({ size = "medium", ...props }: GrantProps) => {
           />
         </div>
         <div className="mt-0.5 ml-3">
-          <Pill primary={true}>{buyTokenPrice}</Pill>
+          <Pill primary={true}>{props.data.buyPrice}</Pill>
           <div className="ml-1">
             <div className="mt-5">
               <h3>{props.data.name}</h3>
