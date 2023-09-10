@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import React from "react";
 import CheckoutHeader from "../../components/CheckoutHeader";
 import { HeadMetadata } from "../../components/HeadMetadata";
+import { WalletContextProvider } from "../../contexts/WalletContext";
 
 export const metadata: Metadata = {
   title: "grants.tech",
@@ -19,7 +20,9 @@ export default function RootLayout({
       {HeadMetadata}
       <body>
         <CheckoutHeader />
-        <main>{children}</main>
+        <WalletContextProvider>
+          <main>{children}</main>
+        </WalletContextProvider>
         {/* <Footer /> */}
       </body>
     </html>
