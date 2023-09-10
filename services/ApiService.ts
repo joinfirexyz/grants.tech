@@ -1,3 +1,5 @@
+import { TransactionRequest } from "ethers";
+
 export type TTransactionStatus =
   | "PENDING_SIGNATURE"
   | "SUBMITTED"
@@ -203,9 +205,16 @@ export class ApiService {
     return response;
   }
 
-  public async createTransaction(deviceId: string): Promise<ITransactionData> {
+  public async createTransaction(
+    deviceId: string,
+    data: {
+      typedData?: Record<string, string>;
+      transactionRequest?: TransactionRequest;
+    }
+  ): Promise<ITransactionData> {
     const createTxResponse = await this._postCall(
-      `api/devices/${deviceId}/transactions`
+      `api/devices/${deviceId}/transactions`,
+      data
     );
     return createTxResponse;
   }

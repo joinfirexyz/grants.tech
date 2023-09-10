@@ -30,7 +30,7 @@ export interface IAppState {
   loginToDemoAppServer: () => void;
   assignCurrentDevice: () => Promise<void>;
   generateNewDeviceId: () => Promise<void>;
-  createTransaction: () => Promise<void>;
+  createTransaction: (data: Record<string, string>) => Promise<void>;
   takeover: () => Promise<void>;
   setPassphrase: (passphrase: string) => void;
   regeneratePassphrase: () => void;
