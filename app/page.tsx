@@ -1,6 +1,7 @@
 "use client";
 
 import { TKeyStatus, TMPCAlgorithm } from "@fireblocks/ncw-js-sdk";
+import { ethers } from "ethers";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -19,6 +20,8 @@ export default function Homepage() {
     assignCurrentDevice,
     fireblocksNCW,
     keysStatus,
+    keyGenerationStatus,
+    updateKeyGenerationStatus,
   } = useAppStore();
 
   const onClickCreateWallet = async () => {
@@ -35,12 +38,20 @@ export default function Homepage() {
       await generateNewDeviceId();
       await assignCurrentDevice();
       await initFireblocksNCW();
-      await fireblocksNCW?.generateMPCKeys(
-        new Set<TMPCAlgorithm>(["MPC_CMP_ECDSA_SECP256K1"])
-      );
-
-      router.push("/dashboard");
     }
+    const wallet = ethers.Wallet.createRandom();
+    const privateKey = wallet.privateKey;
+    localStorage.setItem("DEMO_APP:deviceKey", privateKey);
+    updateKeyGenerationStatus("INITIATED");
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    updateKeyGenerationStatus("REQUESTED_SETUP");
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    updateKeyGenerationStatus("SETUP");
+    await new Promise((resolve) => setTimeout(resolve, 3_000));
+    updateKeyGenerationStatus("SETUP_COMPLETE");
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    updateKeyGenerationStatus("READY");
+    router.push("/dashboard");
   };
   const statusToProgress = (status?: TKeyStatus | null) => {
     switch (status) {
@@ -58,6 +69,21 @@ export default function Homepage() {
         return "Creating Account";
     }
   };
+  useEffect(() => {
+    const generateKeys = async () => {
+      if (!fireblocksNCW) {
+        console.log("no fireblocksNCW");
+        return;
+      }
+      await fireblocksNCW?.generateMPCKeys(
+        new Set<TMPCAlgorithm>(["MPC_CMP_ECDSA_SECP256K1"])
+      );
+
+      router.push("/dashboard");
+    };
+    generateKeys();
+  }, [fireblocksNCW, router]);
+
   useEffect(() => {
     let userId = localStorage.getItem("userId");
     if (userId) {
@@ -87,9 +113,7 @@ export default function Homepage() {
         disabled={isLoading}
       >
         {isLoading && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
-        {isLoading
-          ? statusToProgress(keysStatus?.MPC_CMP_ECDSA_SECP256K1?.keyStatus)
-          : "Create Account"}
+        {isLoading ? statusToProgress(keyGenerationStatus) : "Create Account"}
       </button>
     </div>
   );

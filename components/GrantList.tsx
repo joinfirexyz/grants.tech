@@ -1,10 +1,11 @@
 "use client";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
+import { useAppStore } from "../services/AppStore";
 import Drawer from "./Drawer";
 import { Grant } from "./Grant";
 import { grants as defaultGrants } from "./Grants";
-import { grantTechContract } from "./contract";
+import { grantTechContract, sendTransaction } from "./contract";
 
 interface GrantListProps {
   grants: any[];
@@ -48,6 +49,8 @@ export const GrantList = ({ ...props }: GrantListProps) => {
   const [sellTokenPrice, setSellTokenPrice] = useState("0");
   const [grants, setGrants] = useState<Grant[]>(defaultGrants);
   const [myTokensFilter, setMyTokensFilter] = useState(false);
+  const { createTransaction, txs } = useAppStore();
+  console.log("txs", txs);
 
   useEffect(() => {
     const addSellPriceToGrants = async () => {
@@ -86,15 +89,25 @@ export const GrantList = ({ ...props }: GrantListProps) => {
   }, [selectedIndex]);
 
   const buyShares = async (address: string) => {
-    const tx = await grantTechContract.buyShares(address, 1, {
+    const txReq = {
+      to: grantTechContract.address,
+      data: grantTechContract.interface.encodeFunctionData("buyShares", [
+        address,
+        1,
+      ]),
       value: ethers.utils.parseEther(buyTokenPrice),
+    } satisfies ethers.providers.TransactionRequest;
+
+    await createTransaction({
+      transactionRequest: txReq,
     });
-    await tx.wait();
+    const result = await sendTransaction("buyShares", [address, 1]);
+    console.log("result", result);
   };
 
   const sellShares = async (address: string) => {
-    const tx = await grantTechContract.sellShares(address, 1);
-    await tx.wait();
+    const result = await sendTransaction("sellShares", [address, 1]);
+    console.log("result", result);
   };
   return (
     <>

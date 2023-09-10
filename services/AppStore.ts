@@ -5,9 +5,10 @@ import {
   IKeyDescriptor,
   IMessagesHandler,
   TEvent,
+  TKeyStatus,
   TMPCAlgorithm,
 } from "@fireblocks/ncw-js-sdk";
-import { TransactionRequest } from "ethers";
+import { ethers } from "ethers";
 import { create } from "zustand";
 import { ApiService, ITransactionData } from "./ApiService";
 import { IAppState } from "./IAppStore";
@@ -55,6 +56,7 @@ export const useAppStore = create<IAppState>()((set, get) => {
   };
 
   return {
+    keyGenerationStatus: null,
     userId: null,
     walletId: null,
     pendingWeb3Connection: null,
@@ -108,6 +110,9 @@ export const useAppStore = create<IAppState>()((set, get) => {
           assignDeviceStatus: "failed",
         }));
       }
+    },
+    updateKeyGenerationStatus: (status: TKeyStatus) => {
+      set((state) => ({ ...state, keyGenerationStatus: status }));
     },
     generateNewDeviceId: async () => {
       const deviceId = generateDeviceId();
@@ -241,13 +246,20 @@ export const useAppStore = create<IAppState>()((set, get) => {
     },
     createTransaction: async (data: {
       typedData?: Record<string, string>;
-      transactionRequest?: TransactionRequest;
+      transactionRequest?: ethers.providers.TransactionRequest;
     }) => {
       if (!apiService) {
         throw new Error("apiService is not initialized");
       }
       const { deviceId } = get();
       const newTxData = await apiService.createTransaction(deviceId, data);
+      console.log("newTxData", newTxData);
+      if (newTxData.status === "PENDING_SIGNATURE") {
+        const signResult = await get().fireblocksNCW?.signTransaction(
+          newTxData.id
+        );
+        console.log("signResult", signResult);
+      }
       const txs = updateOrAddTx(get().txs, newTxData);
       set((state) => ({ ...state, txs }));
     },

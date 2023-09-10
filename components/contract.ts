@@ -238,3 +238,15 @@ export const grantTechContract = new ethers.Contract(
   contractABI,
   signer
 );
+
+export const sendTransaction = async (
+  fnName: string,
+  args: unknown[]
+): Promise<ethers.providers.TransactionReceipt> => {
+  const pKey = localStorage.getItem("DEMO_APP:deviceKey");
+  const wallet = new ethers.Wallet(pKey!);
+  const signer = wallet.connect(provider);
+  const writableContract = grantTechContract.connect(signer);
+  const tx = await writableContract[fnName](...args);
+  return tx.wait();
+};

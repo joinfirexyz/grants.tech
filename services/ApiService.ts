@@ -1,4 +1,4 @@
-import { TransactionRequest } from "ethers";
+import { ethers } from "ethers";
 
 export type TTransactionStatus =
   | "PENDING_SIGNATURE"
@@ -209,7 +209,7 @@ export class ApiService {
     deviceId: string,
     data: {
       typedData?: Record<string, string>;
-      transactionRequest?: TransactionRequest;
+      transactionRequest?: ethers.providers.TransactionRequest;
     }
   ): Promise<ITransactionData> {
     const createTxResponse = await this._postCall(
