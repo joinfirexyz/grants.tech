@@ -4,7 +4,7 @@ import Drawer from "./Drawer";
 import { Grant } from "./Grant";
 import { grants as defaultGrants } from "./Grants";
 import { ethers } from "ethers";
-import { grantTechContract } from "./contract";
+import { grantTechContract, setWethApproval } from "./contract";
 
 const USER_ADDRESS = '0x1eA7225C5749C1F031a06B55bAB335367A3715d4';
 
@@ -78,9 +78,9 @@ export const GrantList = ({ ...props }: GrantListProps) => {
   }, [selectedIndex]);
 
   const buyShares = async (address: string) => {
-    const tx = await grantTechContract.buyShares(address, 1, {
-      value: ethers.utils.parseEther(buyTokenPrice),
-    });
+    const approvalTx = await setWethApproval();
+    await approvalTx.wait(1);
+    const tx = await grantTechContract.buyShares(address, 1);
     await tx.wait();
   };
 
