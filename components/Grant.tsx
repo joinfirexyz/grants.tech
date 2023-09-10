@@ -1,16 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ethers } from "ethers";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 import { Pill } from "./Pill";
-import { grantTechContract } from "./contract";
 
 interface GrantProps {
   size?: "small" | "medium" | "large";
   data: any;
-  buyPrice: number;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
