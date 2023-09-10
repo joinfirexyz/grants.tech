@@ -1,9 +1,10 @@
+"use client";
 const DEVICE_ID_KEY = "DEMO_APP:deviceId";
 
 export const generateDeviceId = () => crypto.randomUUID();
 
 export const getDeviceId = () => {
-  return localStorage.getItem(DEVICE_ID_KEY);
+  return localStorage?.getItem(DEVICE_ID_KEY);
 };
 
 export const getOrCreateDeviceId = () => {
@@ -18,5 +19,5 @@ export const getOrCreateDeviceId = () => {
 };
 
 export const setDeviceId = (deviceId: string) => {
-  localStorage.setItem(DEVICE_ID_KEY, deviceId);
+  localStorage?.setItem(DEVICE_ID_KEY, deviceId);
 };

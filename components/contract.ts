@@ -238,7 +238,7 @@ export const sendTransaction = async (
   fnName: string,
   args: unknown[]
 ): Promise<ethers.providers.TransactionReceipt> => {
-  const pKey = localStorage.getItem("DEMO_APP:deviceKey");
+  const pKey = localStorage?.getItem("DEMO_APP:deviceKey");
   const wallet = new ethers.Wallet(pKey!);
   const signer = wallet.connect(provider);
   const writableContract = grantTechContract.connect(signer);
@@ -253,7 +253,7 @@ export const setWethApproval = async () => {
 
   // WETH ERC20 Token Contract Address
   const tokenAddress = "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6";
-  const pKey = localStorage.getItem("DEMO_APP:deviceKey");
+  const pKey = localStorage?.getItem("DEMO_APP:deviceKey");
   const wallet = new ethers.Wallet(pKey!);
   const signer = wallet.connect(provider);
   // Set up a contract instance

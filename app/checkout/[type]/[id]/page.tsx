@@ -10,7 +10,7 @@ import {
   setWethApproval,
 } from "../../../../components/contract";
 import { WalletContext } from "../../../../contexts/WalletContext";
-import { useAppStore } from "../../../../services/AppStore";
+import { getAppStore } from "../../../../services/AppStore";
 
 export default function Page({
   params,
@@ -24,7 +24,7 @@ export default function Page({
   const [grants, setGrants] = useState<Grant[]>(defaultGrants);
   const { walletAddress } = useContext(WalletContext);
   const [loading, setLoading] = useState(false);
-  const { createTransaction, txs } = useAppStore();
+  const { createTransaction, txs } = getAppStore();
 
   useEffect(() => {
     const addSellPriceToGrants = async () => {

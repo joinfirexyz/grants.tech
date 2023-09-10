@@ -1,27 +1,16 @@
-import {
-  ConsoleLogger,
-  FireblocksNCW,
-  IEventsHandler,
-  IKeyDescriptor,
-  IMessagesHandler,
-  TEvent,
-  TKeyStatus,
-  TMPCAlgorithm,
-} from "@fireblocks/ncw-js-sdk";
 import { ethers } from "ethers";
 import { create } from "zustand";
 import { ApiService, ITransactionData } from "./ApiService";
 import { IAppState } from "./IAppStore";
-import { PasswordEncryptedLocalStorage } from "./PasswordEncryptedLocalStorage";
 import { generateDeviceId, getOrCreateDeviceId, setDeviceId } from "./deviceId";
 import { randomPassPhrase } from "./randomPassPhrase";
 
 const rememberBackupPassphrase = (passphrase: string) => {
-  localStorage.setItem("DEMO_APP:backup-passphrase", passphrase);
+  localStorage?.setItem("DEMO_APP:backup-passphrase", passphrase);
 };
 
 const getBackupPassphrase = (): string | null => {
-  return localStorage.getItem("DEMO_APP:backup-passphrase") ?? null;
+  return localStorage?.getItem("DEMO_APP:backup-passphrase") ?? null;
 };
 
 export type TAsyncActionStatus =
@@ -35,7 +24,7 @@ export type TFireblocksNCWStatus =
   | "sdk_available"
   | "sdk_initialization_failed";
 
-export const useAppStore = create<IAppState>()((set, get) => {
+export const getAppStore = create<IAppState>()((set, get) => {
   let apiService: ApiService | null = null;
   let messagesUnsubscriber: (() => void) | null = null;
   let txsUnsubscriber: (() => void) | null = null;
@@ -111,7 +100,7 @@ export const useAppStore = create<IAppState>()((set, get) => {
         }));
       }
     },
-    updateKeyGenerationStatus: (status: TKeyStatus) => {
+    updateKeyGenerationStatus: (status: any) => {
       set((state) => ({ ...state, keyGenerationStatus: status }));
     },
     generateNewDeviceId: async () => {
@@ -167,7 +156,7 @@ export const useAppStore = create<IAppState>()((set, get) => {
         fireblocksNCWStatus: "initializing_sdk",
       }));
       try {
-        const messagesHandler: IMessagesHandler = {
+        const messagesHandler: any = {
           handleOutgoingMessage: (message: string) => {
             if (!apiService) {
               throw new Error("apiService is not initialized");
@@ -176,13 +165,12 @@ export const useAppStore = create<IAppState>()((set, get) => {
           },
         };
 
-        const eventsHandler: IEventsHandler = {
-          handleEvent: (event: TEvent) => {
+        const eventsHandler: any = {
+          handleEvent: (event: any) => {
             switch (event.type) {
               case "key_descriptor_changed":
-                const keysStatus: Record<TMPCAlgorithm, IKeyDescriptor> =
-                  get().keysStatus ??
-                  ({} as Record<TMPCAlgorithm, IKeyDescriptor>);
+                const keysStatus: Record<any, any> =
+                  get().keysStatus ?? ({} as Record<any, any>);
                 keysStatus[event.keyDescriptor.algorithm] = event.keyDescriptor;
                 set((state) => ({ ...state, keysStatus }));
                 break;
@@ -197,28 +185,14 @@ export const useAppStore = create<IAppState>()((set, get) => {
         };
 
         const { deviceId } = get();
-        const secureStorageProvider = new PasswordEncryptedLocalStorage(
-          deviceId,
-          () => {
-            const password = prompt("Enter password", "");
-            return Promise.resolve(password || "");
-          }
-        );
 
-        const fireblocksNCW = await FireblocksNCW.initialize({
-          env: process.env.NEXT_PUBLIC_NCW_SDK_ENV,
-          deviceId,
-          messagesHandler,
-          eventsHandler,
-          secureStorageProvider,
-          logger: new ConsoleLogger(),
-        });
+        const fireblocksNCW: any = null;
 
-        const physicalDeviceId = fireblocksNCW.getPhysicalDeviceId();
+        const physicalDeviceId = fireblocksNCW?.getPhysicalDeviceId();
         messagesUnsubscriber = apiService.listenToMessages(
           deviceId,
           physicalDeviceId,
-          (msg) => fireblocksNCW.handleIncomingMessage(msg)
+          (msg) => fireblocksNCW?.handleIncomingMessage(msg)
         );
         txsUnsubscriber = apiService.listenToTxs(
           deviceId,
@@ -227,7 +201,7 @@ export const useAppStore = create<IAppState>()((set, get) => {
             set((state) => ({ ...state, txs }));
           }
         );
-        const keysStatus = await fireblocksNCW.getKeysStatus();
+        const keysStatus = await fireblocksNCW?.getKeysStatus();
         set((state) => ({
           ...state,
           keysStatus,

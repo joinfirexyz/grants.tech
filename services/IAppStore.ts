@@ -1,9 +1,3 @@
-import {
-  FireblocksNCW,
-  IKeyDescriptor,
-  TKeyStatus,
-  TMPCAlgorithm,
-} from "@fireblocks/ncw-js-sdk";
 import { ethers } from "ethers";
 import {
   ICreateWeb3ConnectionResponse,
@@ -13,8 +7,8 @@ import {
 import { TAsyncActionStatus, TFireblocksNCWStatus } from "./AppStore";
 
 export interface IAppState {
-  keyGenerationStatus: TKeyStatus | null;
-  updateKeyGenerationStatus: (status: TKeyStatus) => void;
+  keyGenerationStatus: any | null;
+  updateKeyGenerationStatus: (status: any) => void;
   userId: string | null;
   deviceId: string;
   walletId: string | null;
@@ -25,9 +19,9 @@ export interface IAppState {
   appStoreInitialized: boolean;
   loginToDemoAppServerStatus: TAsyncActionStatus;
   assignDeviceStatus: TAsyncActionStatus;
-  fireblocksNCW: FireblocksNCW | null;
+  fireblocksNCW?: any;
   fireblocksNCWStatus: TFireblocksNCWStatus;
-  keysStatus: Record<TMPCAlgorithm, IKeyDescriptor> | null;
+  keysStatus: Record<any, any> | null;
   passphrase: string | null;
   initAppStore: (token: string) => void;
   disposeAppStore: () => void;

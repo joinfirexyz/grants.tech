@@ -10,7 +10,7 @@ const DashboardHeader = () => {
   const [address, setAddress] = useState("");
   useEffect(() => {
     const getAddress = async () => {
-      const pKey = localStorage.getItem("DEMO_APP:deviceKey");
+      const pKey = localStorage?.getItem("DEMO_APP:deviceKey");
       const wallet = new ethers.Wallet(pKey!);
       const address = wallet.address;
       setAddress(address);
@@ -20,6 +20,7 @@ const DashboardHeader = () => {
 
   const copyAddressClick = () => {
     navigator.clipboard.writeText(address);
+    alert("Address copied to clipboard!");
   };
 
   return (
