@@ -29,7 +29,7 @@ type Grant = {
   id: string;
   anchor: string;
   logoImg: string;
-  buyPrice?: string;
+  sellPrice?: string;
   githubLink: string;
   twitterLink: string;
   name: string;
@@ -48,22 +48,23 @@ export const GrantList = ({ ...props }: GrantListProps) => {
   const [buyTokenPrice, setBuyTokenPrice] = useState("0");
   const [sellTokenPrice, setSellTokenPrice] = useState("0");
   const [grants, setGrants] = useState<Grant[]>(defaultGrants);
+  const [myTokensFilter, setMyTokensFilter] = useState(false);
 
   useEffect(() => {
-    const addBuyPriceToGrants = async () => {
-      const grantsWithBuyPrice = await Promise.all(
+    const addSellPriceToGrants = async () => {
+      const grantsWithSellPrice = await Promise.all(
         grants.map(async (grant) => {
-          const tokenPrice = await grantTechContract.getBuyPrice(
+          const tokenPrice = await grantTechContract.getSellPrice(
             grant.anchor,
             1
           );
-          grant.buyPrice = ethers.utils.formatEther(tokenPrice.toString());
+          grant.sellPrice = ethers.utils.formatEther(tokenPrice.toString());
           return grant;
         })
       );
-      setGrants(grantsWithBuyPrice);
+      setGrants(grantsWithSellPrice);
     };
-    addBuyPriceToGrants();
+    addSellPriceToGrants();
   }, []);
 
   useEffect(() => {
@@ -98,6 +99,30 @@ export const GrantList = ({ ...props }: GrantListProps) => {
   };
   return (
     <>
+      <nav className="bg-white flex gap-2 min-w-full p-2 shadow-md">
+      <button
+            className={`
+              flex-1 py-1 px-4 rounded-full
+              text-sm text-semibold text-plum font-Manrope
+              border-none appearance-none outline-none cursor-pointer
+              ${!myTokensFilter ? `bg-plum text-white` : `bg-grey-100 hover:bg-grey-400`}
+            `}
+            onClick={()=>setMyTokensFilter(!myTokensFilter)}
+          >
+            Top
+          </button>
+          <button
+            className={`
+              flex-1 py-1 px-4 rounded-full
+              text-sm text-semibold text-plum font-Manrope
+              border-none appearance-none outline-none cursor-pointer
+              ${myTokensFilter ? `bg-plum text-white` : `bg-grey-100 hover:bg-grey-400`}
+            `}
+            onClick={()=>setMyTokensFilter(!myTokensFilter)}
+          >
+            Your Keys
+          </button>
+      </nav>
       <Drawer visible={modalOpen} setVisible={setModalOpen}>
         <div className="h-[375px] p-4">
           <h1 className="font-ClashDisplay text-xl">
@@ -122,7 +147,7 @@ export const GrantList = ({ ...props }: GrantListProps) => {
       <div className={`flex flex-col space-y-3  ${props.className}`}>
         {grants
           .filter((grant) => {
-            return grant.buyPrice && +grant.buyPrice > 0;
+            return !myTokensFilter || (grant.sellPrice && +grant.sellPrice > 0);
           })
           .map((grant, index) => (
             <button
