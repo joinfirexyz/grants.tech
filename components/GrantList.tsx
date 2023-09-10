@@ -17,7 +17,7 @@ type Grant = {
   id: string;
   anchor: string;
   logoImg: string;
-  sellPrice?: string;
+  sellPrice?: number;
   githubLink: string;
   twitterLink: string;
   name: string;
@@ -48,9 +48,8 @@ export const GrantList = ({ ...props }: GrantListProps) => {
             1
           );
           const quantityOwned = await grantTechContract.sharesBalance(grant.anchor, USER_ADDRESS);
-          grant.sellPrice = ethers.utils.formatEther(tokenPrice.toString());
           grant.quantityOwned = quantityOwned;
-          console.log(grant.quantityOwned);
+          grant.sellPrice = +ethers.utils.formatEther(tokenPrice.toString()) * quantityOwned.toNumber();
           return grant;
         })
       );
