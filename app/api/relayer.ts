@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Interface, parseUnits } from "ethers";
+import { Interface, parseUnits } from "ethers/lib/utils";
 
 // // Address of the USDC contract on goerli
 const USDC_ADDRESS = "0x07865c6E87B9F70255377e024ace6630C1Eaa37F";
@@ -48,7 +48,7 @@ export async function estimateTransaction(
     ],
     userAddress: senderAddress,
     sourceToken: USDC_ADDRESS,
-    tokenAmount: "0x" + parseUnits(readableSendAmount, 6).toString(16),
+    tokenAmount: "0x" + (parseUnits(readableSendAmount, 6) as any).toString(16), //TODO: Review this absolute war crime of a typecast
     sourceChain: SOURCE_CHAIN_ID,
     destinationToken: USDC_ADDRESS,
     destinationChain: DEST_CHAIN_ID,
