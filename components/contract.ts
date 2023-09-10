@@ -7,7 +7,7 @@ const provider = new ethers.providers.InfuraProvider(
 const wallet = new ethers.Wallet(
   "5614556b0e9e476e3c2fb598f0bd034761e73182c073dbf8d88c917ce42ce4bc"
 );
-const signer = wallet.connect(provider);
+export const signer = wallet.connect(provider);
 const contractAddress = "0xca0c1598da3944555cdfa0f54f3348a954619de9";
 const contractABI = [
   {
