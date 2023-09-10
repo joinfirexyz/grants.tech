@@ -257,7 +257,7 @@ export const GrantList = ({ ...props }: GrantListProps) => {
   const grantTechContract = new ethers.Contract(
     contractAddress,
     contractABI,
-    provider
+    signer
   );
 
   useEffect(() => {
@@ -270,6 +270,17 @@ export const GrantList = ({ ...props }: GrantListProps) => {
     }
     getPrice();
   }, []);
+
+  const buyShares = async () => {
+    const tx = await grantTechContract.buyShares(
+      "0x17ae58ab79444ad5b8ee2e232caf13c65c32af75",
+      1,
+      {
+        value: ethers.utils.parseEther(tokenPrice),
+      }
+    );
+    await tx.wait();
+  }
   return (
     <>
       <Drawer visible={modalOpen} setVisible={setModalOpen}>
@@ -279,7 +290,7 @@ export const GrantList = ({ ...props }: GrantListProps) => {
           </h1>
           <button
             onClick={() => {
-              console.log("TODO: Add buy call here", grants[selectedIndex]);
+              buyShares();
             }}
           >
             Buy for {tokenPrice}
