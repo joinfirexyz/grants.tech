@@ -26,7 +26,7 @@ export default function Page({
             grant.anchor,
             1
           );
-          grant.sellPrice = ethers.utils.formatEther(tokenPrice.toString());
+          grant.sellPrice = +ethers.utils.formatEther(tokenPrice.toString());
           return grant;
         })
       );

@@ -14,7 +14,7 @@ interface GrantListProps {
   className?: string;
 }
 
-type Grant = {
+export type Grant = {
   id: string;
   anchor: string;
   logoImg: string;
